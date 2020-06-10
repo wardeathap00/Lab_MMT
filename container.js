@@ -8,6 +8,11 @@ const container = dependable.container();
 const simpleDependencies = [
     ['_','Lodash'],
     ['passport', 'passport'],
+    ['formidable', 'formidable'],
+    ['async', 'async'],
+    ['Group','./models/group'],
+   
+    
 ];
 
 //khi vòng lặp chạy, khi gọi _ hàm sẽ trả về Lodash

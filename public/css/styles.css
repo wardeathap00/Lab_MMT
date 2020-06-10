@@ -16,7 +16,7 @@ align-content: center;
 }
 
 .card{
-height: 370px;
+height: auto;
 margin-top: auto;
 margin-bottom: auto;
 width: 400px;
@@ -36,6 +36,16 @@ cursor: pointer;
 
 .card-header h3{
 color: white;
+}
+
+/* .responsive {
+    width: 300px;
+    height: auto;
+} */
+
+.card-validator{
+    padding-left: 20px;
+    padding-right: 20px;
 }
 
 .social_icon{
@@ -86,4 +96,11 @@ color: white;
 
 .links a{
 margin-left: 4px;
+}
+
+.thumbnail>img {
+    display: block;
+    max-width: 100%;
+    height: 100px;
+    width: auto;
 }

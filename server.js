@@ -9,17 +9,18 @@ const MongoStore = require('connect-mongo')(session);
 const mongoose = require('mongoose');
 const flash = require('connect-flash');
 const passport = require('passport');
+const socketIO = require('socket.io');  
 
 const container = require('./container');
 
 const url = 'mongodb://localhost/labmmt';
 const db = mongoose.connection;
 
-container.resolve(function(users){
+container.resolve(function(users, _, admin, home, group){
 
     mongoose.Promise = global.Promise;
     mongoose.connect(url, {
-        useNewUrlParser: true,
+        useNewUrlParser: true, 
         useUnifiedTopology: true
       });
     mongoose.set('useCreateIndex', true);
@@ -37,16 +38,23 @@ container.resolve(function(users){
     function SetupExpress(){
         const app = express();
         const server = http.createServer(app);
+        const io = socketIO(server);
+        
         server.listen(6969, function(){
             console.log("Listening on port 6969");
         });
 
         ConfigureExpress(app);
 
+        require('./socket/groupchat.js')(io);
+
         //Setup router
         const router = require('express-promise-router')();
-        users.SetRouting(router);
 
+        users.SetRouting(router);
+        admin.SetRouting(router);
+        home.SetRouting(router);
+        group.SetRouting(router);
         app.use(router);
     };
 
@@ -75,10 +83,10 @@ container.resolve(function(users){
         }));
         //set connecct flash
         app.use(flash());
-       
+        //require('./passport/passport-local');
         //set passport
         app.use(passport.initialize());
         app.use(passport.session());
-        
+        app.locals._ = _;
     };
 })

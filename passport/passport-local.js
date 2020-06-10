@@ -2,7 +2,7 @@
 
 const passport = require('passport');
 const User = require('../models/user')
-const LocalStategy = require('passport-local').Strategy;
+const LocalStrategy = require('passport-local').Strategy;
 
 // chuẩn ES6
 // serializeUser cho phép lưu dữ liệu người trong sesstion này
@@ -19,7 +19,7 @@ passport.deserializeUser((id, done) => {
 })
 
 //đăng nhập local
-passport.use('local.signup', new LocalStategy   ({
+passport.use('local.signup', new LocalStrategy({
     usernameField: 'email',
     passwordField: 'password',
     passReqToCallback: 'true',
@@ -47,4 +47,25 @@ passport.use('local.signup', new LocalStategy   ({
 
     });
 
+}));
+
+passport.use('local.login', new LocalStrategy({
+    usernameField: 'email',
+    passwordField: 'password',
+    passReqToCallback: true
+}, (req, email, password, done) => {
+    
+    User.findOne({'email': email}, (err, user) => {
+       if(err){
+           return done(err);
+       }
+
+       const messages = [];
+       if(!user || !user.validUserPassword(password)){
+            messages.push('Email is not exits or Password is not correct');
+            return done(null, false, req.flash('error', messages));
+       }
+       return done(null, user);     
+        
+    });
 }));

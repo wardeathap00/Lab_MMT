@@ -30,10 +30,23 @@
 					<span><i class="fab fa-twitter-square"></i></span>
 				</div>
 			</div>
-			<div class="card-body">
-				<div>
-					test
-				</div>
+
+			<div class="card-validator">
+				
+				<% if(hasErrors) { %>
+					<div class="alert alert-danger" role="alert">
+						<a href="/signup" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+						<% _.forEach(messages, function(error) {%>
+							<%= error %><br>
+						<% }) %>
+
+
+					</div>
+				<% } %>
+
+			</div>
+
+			<div class="card-body">				
 				<form action="/signup" method="POST">
 					<div class="input-group form-group">
 						<div class="input-group-prepend">
