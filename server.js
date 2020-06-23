@@ -10,10 +10,11 @@ const mongoose = require('mongoose');
 const flash = require('connect-flash');
 const passport = require('passport');
 const socketIO = require('socket.io');  
+const {Users} = require('./helpers/UsersClass');
 
 const container = require('./container');
 
-const url = 'mongodb://localhost/labmmt';
+const url = 'mongodb://localhost/testMongoDB_CSDL';
 const db = mongoose.connection;
 
 container.resolve(function(users, _, admin, home, group){
@@ -23,6 +24,7 @@ container.resolve(function(users, _, admin, home, group){
         useNewUrlParser: true, 
         useUnifiedTopology: true
       });
+
     mongoose.set('useCreateIndex', true);
 
     db.once('open', _ => {
@@ -44,9 +46,9 @@ container.resolve(function(users, _, admin, home, group){
             console.log("Listening on port 6969");
         });
 
-        ConfigureExpress(app);
+        ConfigureExpress(app);  
 
-        require('./socket/groupchat.js')(io);
+        require('./socket/groupchat.js')(io, Users);
 
         //Setup router
         const router = require('express-promise-router')();
@@ -75,16 +77,17 @@ container.resolve(function(users, _, admin, home, group){
         //set middleware validator
         app.use(validator());
         //set session, secrect key, mongo connect ...
+       
+       
+        app.use(flash());
+       
         app.use(session({
             secret: 'MMT_LAB',
             resave: true,
             saveUninitialized: true,
             store: new MongoStore({mongooseConnection: mongoose.connection})
         }));
-        //set connecct flash
-        app.use(flash());
-        //require('./passport/passport-local');
-        //set passport
+        
         app.use(passport.initialize());
         app.use(passport.session());
         app.locals._ = _;

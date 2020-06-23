@@ -9,7 +9,6 @@ body {
     line-height: 1.42857143;
     font-family: 'Numans', sans-serif;
     color: #555;
-    background: #eeeeee;
 }
 
 
@@ -304,7 +303,11 @@ member_list li:hover {
     border-right: 1px solid rgba(128, 128, 128, 0.32);
 }
 
-
+.chat-name{
+    font-size: 17px;
+    font-weight: 600;
+    color: #4aa1f3;
+}
 
 
 

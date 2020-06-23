@@ -45,6 +45,9 @@ passport.use('local.signup', new LocalStrategy({
             done(null, newUser);
         });
 
+        console.log(newUser);
+        
+
     });
 
 }));
@@ -60,12 +63,16 @@ passport.use('local.login', new LocalStrategy({
            return done(err);
        }
 
+       console.log("DB" + user);
+
        const messages = [];
        if(!user || !user.validUserPassword(password)){
             messages.push('Email is not exits or Password is not correct');
             return done(null, false, req.flash('error', messages));
        }
-       return done(null, user);     
+       return done(null, user);          
+       
+       
         
     });
 }));

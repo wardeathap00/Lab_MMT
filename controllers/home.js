@@ -1,4 +1,8 @@
-module.exports =  function(async, Group, _){
+//const User = require("../helpers/User");
+
+//const { Users } = require("../helpers/UsersClass");
+
+module.exports =  function(async, Group, _, User){
     return {
         SetRouting: function(router){
             router.get('/home', this.homePage);
@@ -20,7 +24,18 @@ module.exports =  function(async, Group, _){
                     }], (err, newResult) => {
                         callback(err, newResult);
                     });
-               }
+               },
+
+            //  function(callback){
+            //     console.log(typeof Users);
+                
+            //     Users.findOne({'username': req.user.username}).populate('request.userID').exec((err, result) => {
+            //         callback(err, result);
+            //     })
+            // },
+
+
+
            ], (err, result) => {
                const res1 = result[0];
                const res2 = result[1];
@@ -35,10 +50,16 @@ module.exports =  function(async, Group, _){
 
                //console.log(dataChunk);
                
+               const {user} = req;
 
+               console.log(`user check: ${typeof user}`)
+               
                res.render('home', {title: 'Homepage', data: dataChunk});
+
            })           
         },
+
+
 
 
 

@@ -6,12 +6,12 @@ const container = dependable.container();
 
 //khai báo 1 cái mảng array chứa tên các thư viện
 const simpleDependencies = [
-    ['_','Lodash'],
+    ['_','lodash'],
     ['passport', 'passport'],
     ['formidable', 'formidable'],
     ['async', 'async'],
     ['Group','./models/group'],
-   
+    ['Users', './models/user'],
     
 ];
 

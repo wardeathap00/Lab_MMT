@@ -12,70 +12,41 @@
     
 <%- include('partials/navbar.ejs'); %>
 
-<!-- <div class="col-md-12">
-   <form action="#" method="post">
-       <div class="form-group ad-30" style="margin-top:8px;">
-            <div class="input-group search-style">
-                <input class="form-control new-search-bar"  name="country" id="search" placeholder="Enter Your Club Name" type="text">
-                <span class="input-group-btn">
-                    <button class="btn input-btn" type="" id="search-form">Search</button>
-                </span>
-            </div>
-        </div>
-   </form>
-</div> -->
+
   
 <div class="col-md-12">
     <div class="">
         <div class="row">
-            <div class="col-md-3">
-                <div class="row">
-                    <div class="col-md-12">
-                        <div class="filter-container">
-                            <div class="card">
-                                <form action="#" method="post">
-                                    <!-- <div class="content">
-                                        <p class="filter">
-                                            FILTER
-                                        </p>
-                                        <hr/>
-                                        <select class="" name="country" id="country" >
-                                            <option value="">Filter By Country</option>
-											<option>England</option>
-											<option>Germany</option>
-											<option>France</option>
-                                        </select>
-                                        <div class="clearfix"></div>
-                                        <button class="btn add-apply">Apply</button>
-                                    </div> -->
-                                </form>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            
             
             <div class="col-md-9">
                 <div>
+
+                    <input type="hidden" id="name-user" value="<%= user.username %>">
+                    <input type="hidden" id="name-image" value="<%= user.userImage %>"> 
+
                     <% _.forEach(data, function(val){ %>
                     <div class="category-list">
                         <div class="row">
                             <% _.forEach(val, function(val2){ %>
-                            <form action="# " method="post" id="add-fav">
+                            <!-- <form action="# " method="post" id="add-fav"> -->
                                 <div class="item col-md-4">
-                                    <a href="/group/<%= val2.name %>" style="text-decoration: none; ">
+                                    <a href="/group/<%= val2.name.replace(/ /g, "-") %>" style="text-decoration: none; ">
                                         <div class="thumbnail">
                                         <img src="/uploads/<%= val2.image%>" alt="" class="responsive">
                                             <div class="caption">
-                                                <h4> <%= val2.name %> </h4>
+                                                <h4> <%= val2.name %> (<%= val2.members.length %>) </h4>
                                                 
                                                 <div class="row">
                                                     <div class="col-xs-12 col-md-6">
                                                         <p>
-                                                            <%= val2.number %>
+                                                            <%= val2.carrera %>
                                                         </p>
                                                     </div>
                                                     
+                                                    <input type="hidden" name="id" id="id" value="<%= val2._id %>">
+                                                    <input type="hidden" name="groupName" id="group_Name" value="<%= val2.name %>"> 
+
                                                     <div class="col-xs-12 col-md-6">
                                                         <button class="btn add-fav">
                                                             Add To Favorite
@@ -101,5 +72,13 @@
     
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>  
+
+<script src="/socket.io/socket.io.js"></script>  
+<script src="/js/messagelink.js"></script>
+<script src="/js/group/sentrequest.js"></script>
+<script src="/js/home.js"></script>
+<script src="/js/global.js"></script>
+<script src="/js/deparam.js"></script>
+
 </body>
 </html>
