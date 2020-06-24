@@ -1,77 +1,88 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
+
 <head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
-    <link rel="stylesheet" type="text/css" href="css/styles.css">
+    <title>C.CHAT</title>
+
+    <meta charset="utf-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <!-- Bootstrap core CSS -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Material Design Bootstrap -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/mdbootstrap/4.5.4/css/mdb.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/css/style.css"> 
+
 </head>
+
+
 <body>
-    
-<%- include('partials/navbar.ejs'); %>
 
+  <%- include('partials/navbar.ejs'); %>
 
+  <hr>
+
+<div class="container">
   
-<div class="col-md-12">
-    <div class="">
-        <div class="row">
-            
-            
-            <div class="col-md-9">
-                <div>
+    <input type="hidden" id="name-user" value="<%= user.username %>">
+    <input type="hidden" id="name-image" value="<%= user.userImage %>">
 
-                    <input type="hidden" id="name-user" value="<%= user.username %>">
-                    <input type="hidden" id="name-image" value="<%= user.userImage %>"> 
+      <% _.forEach(chunks, function(val) { %>
 
-                    <% _.forEach(data, function(val){ %>
-                    <div class="category-list">
-                        <div class="row">
-                            <% _.forEach(val, function(val2){ %>
-                            <!-- <form action="# " method="post" id="add-fav"> -->
-                                <div class="item col-md-4">
-                                    <a href="/group/<%= val2.name.replace(/ /g, "-") %>" style="text-decoration: none; ">
-                                        <div class="thumbnail">
-                                        <img src="/uploads/<%= val2.image%>" alt="" class="responsive">
-                                            <div class="caption">
-                                                <h4> <%= val2.name %> (<%= val2.members.length %>) </h4>
-                                                
-                                                <div class="row">
-                                                    <div class="col-xs-12 col-md-6">
-                                                        <p>
-                                                            <%= val2.carrera %>
-                                                        </p>
-                                                    </div>
-                                                    
-                                                    <input type="hidden" name="id" id="id" value="<%= val2._id %>">
-                                                    <input type="hidden" name="groupName" id="group_Name" value="<%= val2.name %>"> 
+        <div class="card-deck">
+          <% _.forEach(val, function(val2) { %>
+          
+          <a href="/group/<%= val2.name.replace(/ /g, "-") %>" class="card-link">
+            <div class="card">
+              <img src="/uploads/<%= val2.image %>" class="card-img-top img-fluid" alt="Card image cap">
+              <div class="card-body">
+                <h5 class="card-title"><%= val2.name  %> (<%= val2.members.length %>) </h5>
+              </a>
+                <p class="card-text"><%= val2.carrera  %></p>
+              </div>
+              <div class="card-footer">
+                <form action="/home" method="post" id="favorite">
 
-                                                    <div class="col-xs-12 col-md-6">
-                                                        <button class="btn add-fav">
-                                                            Add To Favorite
-                                                        </button>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </a>
-                                </div>
-                            </form>
-                            <% }) %>
-                        </div>
-                    </div>
-                    <% }) %>
-                </div>
+                 
+                <input type="hidden" name="id" id="id" value="<%= val2._id %>">
+                <input type="hidden" name="groupName" id="group_Name" value="<%= val2.name %>">
+               
+</form>
+                
+                
+              </div>
             </div>
+
+            <% }) %>
         </div>
-    </div>
+
+        <hr>
+      <% }) %>
+
+
+
+
+  <hr>
+
+
+
+
 </div>
 
-  
-    
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>  
+
+
+<!-- JQuery -->
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<!-- Bootstrap tooltips -->
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.13.0/umd/popper.min.js"></script>
+<!-- Bootstrap core JavaScript -->
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0/js/bootstrap.min.js"></script>
+<!-- MDB core JavaScript -->
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mdbootstrap/4.5.4/js/mdb.min.js"></script>
 
 <script src="/socket.io/socket.io.js"></script>  
 <script src="/js/messagelink.js"></script>

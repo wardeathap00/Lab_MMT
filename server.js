@@ -1,7 +1,7 @@
-const express = require("express");
-const bodyParser = require("body-parser");
-const ejs = require("ejs");
-const http = require("http");
+const express = require('express');
+const bodyParser = require('body-parser');
+const ejs = require('ejs');
+const http = require('http');
 const cookieParser = require('cookie-parser');
 const validator = require('express-validator');
 const session = require('express-session');
@@ -9,87 +9,93 @@ const MongoStore = require('connect-mongo')(session);
 const mongoose = require('mongoose');
 const flash = require('connect-flash');
 const passport = require('passport');
-const socketIO = require('socket.io');  
-const {Users} = require('./helpers/UsersClass');
+const socketIO = require('socket.io');
+const {Users} = require('./helpers/UsersClass'); 
+const {Global} = require('./helpers/Global');
+
+const url = 'mongodb://localhost/mmt';
+const db = mongoose.connection;
 
 const container = require('./container');
 
-const url = 'mongodb://localhost/testMongoDB_CSDL';
-const db = mongoose.connection;
 
-container.resolve(function(users, _, admin, home, group){
 
-    mongoose.Promise = global.Promise;
-    mongoose.connect(url, {
+container.resolve(function(users, _, admin, home, group, privatechat, results){
+
+	mongoose.Promise = global.Promise;
+	mongoose.connect(url, {
         useNewUrlParser: true, 
         useUnifiedTopology: true
       });
+	
+	mongoose.set('useCreateIndex', true);
 
-    mongoose.set('useCreateIndex', true);
-
-    db.once('open', _ => {
+	db.once('open', _ => {
         console.log('Database connected : ', url)
     });
 
     db.on('error', err => {
         console.error('Connection error : ', err)
     });
-    
-    const app = SetupExpress();
 
-    function SetupExpress(){
-        const app = express();
-        const server = http.createServer(app);
-        const io = socketIO(server);
-        
-        server.listen(6969, function(){
-            console.log("Listening on port 6969");
-        });
+	const app = SetupExpress();
 
-        ConfigureExpress(app);  
+	function SetupExpress(){
+		const app = express();
+		const server = http.createServer(app);
+		const io = socketIO(server);
+		server.listen(3000, function(){
+			console.log('Server Listening on port 3000');
+		});
 
-        require('./socket/groupchat.js')(io, Users);
+		ConfigureExpress(app);
+		
+		require('./socket/groupchat')(io, Users);
+		require('./socket/friend')(io);
+		require('./socket/globalroom')(io, Global, _);
+		require('./socket/privatemessage')(io);
 
-        //Setup router
-        const router = require('express-promise-router')();
+		//Setup Router
+		const router = require('express-promise-router')();
+		users.SetRouting(router);
+		admin.SetRouting(router);
+		home.SetRouting(router);
+		group.SetRouting(router);
+		privatechat.SetRouting(router);
+		results.SetRouting(router);
 
-        users.SetRouting(router);
-        admin.SetRouting(router);
-        home.SetRouting(router);
-        group.SetRouting(router);
-        app.use(router);
-    };
+		app.use(router);
 
-    //gọi những thư viện cần setup ở đây
-    function ConfigureExpress(app) {
+	}
 
-        require('./passport/passport-local');
-        //set thư mực public có thể truy cập
-        app.use(express.static('public'));
-        //set cookie
-        app.use(cookieParser());
-        //set view engine
-        app.set('view engine', 'ejs');
-        //set body parser
-        app.use(bodyParser.json());
-        app.use(bodyParser.urlencoded({extended : true}));
 
-        //set middleware validator
-        app.use(validator());
-        //set session, secrect key, mongo connect ...
-       
-       
-        app.use(flash());
-       
-        app.use(session({
-            secret: 'MMT_LAB',
-            resave: true,
-            saveUninitialized: true,
-            store: new MongoStore({mongooseConnection: mongoose.connection})
-        }));
-        
-        app.use(passport.initialize());
-        app.use(passport.session());
-        app.locals._ = _;
-    };
-})
+
+	function ConfigureExpress(app){
+
+		require('./passport/passport-local');
+
+		app.use(express.static('public'));
+		app.use(cookieParser());
+		app.set('view engine', 'ejs');
+		app.use(bodyParser.json());
+		app.use(bodyParser.urlencoded({extended: true}));
+
+		app.use(validator());
+
+		app.use(session({
+			secret: 'thisisasecretkey',
+			resave: true,
+			saveUninitialized: false,
+			store: new MongoStore({mongooseConnection: mongoose.connection})
+		}));
+
+		app.use(flash());
+
+		app.use(passport.initialize());
+		app.use(passport.session());
+
+		app.locals._ = _;
+
+	}
+
+});

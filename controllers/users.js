@@ -1,44 +1,53 @@
-'use strict'; //kiểu bật mode nghiêm túc, node sẽ giới hạn cái code sai
+'use strict';
 
-//const passport = require('passport');
-
-//export cái hàm bình thường có biến
 module.exports = function(_, passport, User){
 
-    return {  //do trong return nên phải trả về dạng chuối json
-        SetRouting : function(router){
-            router.get('/', this.indexPage);  //method get của express
-            router.get('/signup', this.getSignUp);
-            
-            router.post('/', User.LoginValidator, this.postLogin)
-            router.post('/signup', User.SignUpValidator, this.postSignUp);  //validator trước khi load
-        },
+	return {
+		SetRouting: function(router){
+			router.get('/', this.indexPage);
+			router.get('/signup', this.getSignUp);
+			router.get('/auth/google', this.getGoogleLogin);
+			router.get('/auth/google/callback', this.googleLogin);
 
-        indexPage : function(req, res){
-            const errors = req.flash('error');
-            
-            return res.render('index', {title: 'WAR', messages: errors, hasErrors: errors.length > 0});  //method render view template
-        },
+			router.post('/', User.LoginValidation, this.postLogin);
+			router.post('/signup', User.SignUpValidation, this.postSignUp);
+		},
 
-        postLogin: passport.authenticate('local.login', {
-            successRedirect: '/home',
-            failureRedirect: '/',
-            failureFlash: true,
-        }),
+		indexPage: function(req, res){
+			const errors = req.flash('error');
+			return res.render('index', {title: 'Chat en tiempo real | Login', messages: errors, hasErrors: errors.length > 0});
+		},
 
-        getSignUp : function(req, res){
-            const errors = req.flash('error');
-            return res.render('signup', {title: 'WAR', messages: errors, hasErrors: errors.length > 0}); 
-        },
+		postLogin: passport.authenticate('local.login', {
+			successRedirect: '/home',
+			failureRedirect: '/',
+			failureFlash: true
+		}),
 
-       
-        //khi nhận được submit post thì passport sẽ xác nhận với data để thêm user
-        postSignUp: passport.authenticate('local.signup', {
-            successRedirect: '/home',
-            failureRedirect: '/signup',
-            failureFlash: true,
-        }),
+		getSignUp: function(req, res){
+			const errors = req.flash('error');
+			return res.render('signup', {title: 'Chat en tiempo real | SignUp', messages: errors, hasErrors: errors.length > 0});
+		},
 
-       
-    }
+		postSignUp: passport.authenticate('local.signup', {
+			successRedirect: '/home',
+			failureRedirect: '/signup',
+			failureFlash: true
+		}),
+
+		getGoogleLogin: passport.authenticate('google',{
+			hd: 'alumnos.udg.mx',
+			prompt: 'select_account',
+			scope: ['https://www.googleapis.com/auth/plus.login',
+					'https://www.googleapis.com/auth/plus.profile.emails.read']
+		}),
+
+		googleLogin: passport.authenticate('google',{
+			successRedirect: '/home',
+			failureRedirect: '/signup',
+			failureFlash: true
+		})		
+
+	}
+
 }

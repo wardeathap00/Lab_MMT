@@ -1,33 +1,34 @@
-const { text } = require("body-parser");
-const User = require("../helpers/User");
 module.exports = function(io, Users){
 
-    const users =  new Users();
+		const users = new Users();
 
-    io.on('connect', (socket) => {
-        console.log('bla bla');
-        
-        socket.on('join', (params, callback) => {
-            socket.join(params.room);
-            console.log( "param" + params.name);
-            
-            users.AddUserData(socket.id, params.name, params.room);
-            console.log(users);
-            
+		io.on('connection', (socket) =>{
 
-            callback();
-        });
+			socket.on('join', (params, callback) =>{
+				socket.join(params.room);
+				users.AddUserData(socket.id, params.name, params.room);
+				io.to(params.room).emit('usersList', users.GetUsersList(params.room));
 
-        socket.on('createMessage', (message, callback) => {
-            console.log(message);
+				callback();
+			});
 
-            io.to(message.room).emit('newMessage',  {
-                text : message.text,
-                room : message.room,
-                from : message.sender,
-            });
+			socket.on('createMessage', (message, callback) => {
+				io.to(message.room).emit('newMessage',{
+					text: message.text,
+					room: message.room,
+					from: message.sender
+				});
+				callback();
+			});
 
-            callback();
-        });
-    });
+			socket.on('disconnect', () => {
+				var user = users.RemoveUser(socket.id);
+
+				if(user){
+					io.to(user.room).emit('usersList', users.GetUsersList(users.room));
+				}
+			})
+
+		
+		});
 }

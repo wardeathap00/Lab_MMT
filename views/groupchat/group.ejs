@@ -1,28 +1,33 @@
 <!DOCTYPE html>
-
-<html lang="en">
+<html>
 <head>
+
+  <title><%= title%></title>
+
     <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title><%= title %></title>
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <!-- Bootstrap core CSS -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Material Design Bootstrap -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/mdbootstrap/4.5.4/css/mdb.min.css" rel="stylesheet">
+
+    <link rel="stylesheet" href="/css/group.css">    
     
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
-
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="css/group.css">
-    <!-- <link rel="stylesheet" href="/css/style.css"> -->
-
-
 </head>
-
 <body>
+  
+  <%- include('../partials/navbar.ejs'); %>
 
-    <%- include('../partials/navbar.ejs'); %>
-
-
+<div class="container">
+    
+  
     <div class="col-md-12">
         
+        <input type="hidden" id="name-user" value="<%= user.username %>">
+        <input type="hidden" id="name-image" value="<%= user.userImage %>">
 
         <div class="col-md-12">
             <div class="chat_container">
@@ -42,21 +47,14 @@
                                             </div>
                                             <div class="content">
                                                 <div class="main">
-                                                    <h3 class="name">Username || Fullname</h3>
+                                                    <h3 class="name"><%= user.username %></h3>
                                                     <p class="profession-online">
                                                         <i class="fa fa-circle online" aria-hidden="true"></i>
                                                         Online
                                                     </p>
-                                                    <p class="text-center">
-                                                    	Mantra
-                                                    </p>
+                                                    
                                                 </div>
-                                                <div class="footer">
-                                                    <i class="fa fa-mail-forward"></i> 
-                                                    <a href="#">
-                                                      View My Profile
-                                                    </a>
-                                                </div>
+                                                
                                             </div>
                                         </div>
 
@@ -74,9 +72,15 @@
                                             <div class="content main-scroll">
                                                 <div class="main" id="main_scroll">
                                                     <p class="friends" style="margin-bottom:0px;">
-                                                        Online Friends <span id="numOfFriends"></span>
+                                                        Friend Onl <span id="numOfFriends"></span>
                                                     </p>
                                                     <hr style="margin-top:10px" />
+                                                      <% if(data.friendsList.length > 0) { %>
+                                                        <% _.forEach(data.friendsList, function(value) { %>
+                                                        <div class="friend" hidden>@<%= value.friendName %></div>                                                        
+                                                        <% }) %>
+                                                      <% } %>
+
                                                     
                                                     <div class="onlineFriends"></div>
 
@@ -97,55 +101,52 @@
                         <div class="row">
                             <div class="new_message_head">
                                 <div class="pull-left">
-                                <button class="club_name">
-                                  Group Name
+                                <button class="group_name">
+                                  <%= groupName  %>
                                 </button>
                                 </div>
                                 <div class="pull-right">
                                 </div>
                             </div>
-
+                            <!-- in ra mess -->
                             <div class="chat_area">
-                                <ul id="messages" class="list-unstyled">
+                              <ul id="messages" class="list-unstyled">
+                               <% _.forEach(groupMsg, function(val) { %>
+                                <% if(groupName === val.name){ %>
+                                 <li class="left">
+                                  <span class="chat-img1 pull-left">
+                                    <img src="http://placehold.it/150x150" class="img-circle" alt="">
+                                  </span>
+                                  <div class="chats-body1">
+                                    <span class="chat-name"><%= val.sender.username %></span>
+                                    <br>
+                                    <%= val.body %>
+                                  </div>
+                                </li> 
+                                <% } %>
+                               <% }) %>
+                              </ul>
 
-                                    <!-- <li class="left">
-                                        <span class="chat-img1 pull-left">
-                                            <img src="http://placehold.it/300x300" class="img-circle" alt="">
-                                        </span>
-                                        <div class="chat-body1">
-                                            <span class="chat-name">Username</span>
-                                            <br>
-                                            message body
-                                        </div>
-                                        
-                                    </li> -->
+                              <script id="message-template" type="text/template">
+                                <li class="left">
+                                  <span class="chat-img1 pull-left">
+                                    <img src="http://placehold.it/300x300" class="img-circle" alt="">
+                                  </span>
+                                  <div class="chats-body1">
+                                    <span class="chat-name">{{ sender }}</span>
+                                    <br>
+                                    {{ text }}
+                                  </div>
+                                </li>
+                              </script>
 
-                                </ul>
-                                
-                                <script id="message-template" type="text/template">
-                                  
-                                        <li class="left">
-                                            <span class="chat-img1 pull-left">
-                                                <img src="http://placehold.it/300x300" class="img-circle" alt="">
-                                            </span>
-                                            <div class="chat-body1">
-                                                <span class="chat-name">{{ sender }}</span>
-                                                <br>
-                                                {{ text }}
-                                            </div>
-                                            
-                                        </li>
-                                   
-                                </script>
-                            
                             </div>
 
                             <div class="message_write">
-                              <form  id="message-form" method="POST">
-                                <input type="hidden" id="groupName" value="<%= groupName %>" >
+                              <form action="#" id="message-form" method="post">
+                                <input type="hidden" name="groupName" id="groupName" value="<%= groupName %>">
                                 <input type="hidden" name="sender" id="sender" value="<%= user.username %>">
-
-                                  <textarea class="form-control" name="message" id="msg" placeholder="Type a message"></textarea>
+                                  <textarea class="form-control" name="message" id="msg" placeholder="Enter message ..."></textarea>
                                   <div class="clearfix"></div>
                                   <div class="chat_bottom">
                                       <button id="send-message" class="pull-right btn btn-primary" style="background: #4aa1f3; border: #4aa1f3; ">
@@ -164,7 +165,7 @@
                             <div class="pull-left">
                                 <button class="club_fans">
                                     <i class="fa fa-users" aria-hidden="true" style="padding-right:15px; color:#4aa1f3 !important;"></i>
-                                    Online Club Fans <span id="numValue"></span>
+                                    Group Online <span id="numValue"></span>
                                 </button>
                             </div>
                         </div>
@@ -184,10 +185,10 @@
                                   <div class="modal-body">
                                     <form action="" method="get" id="add_friend">
                                         <input type="hidden" name="receiverName" id="receiverName" value="">
-                                        <input type="hidden" name="sender-name" id="sender-name" value="">
-                                        <button type="submit" id="friend-add" class="btn add"><i class="fa fa-user"></i> Add Friend</button>
+                                        <input type="hidden" name="sender-name" id="sender-name" value="<%= user.username %>">
+                                        <button type="submit" id="friend-add" class="btn add" style="color: red;"><i class="fa fa-user"></i> Add Friend</button>
                                         
-                                        <a id="nameLink" class="btn ">View Profile</a>
+                                        <a id="nameLink" class="btn " style="color: blue;">View Profile</a>
 
                                         <div id="myTest">
                                             
@@ -195,7 +196,7 @@
                                     </form>
                                   </div>
                                   <div class="modal-footer">
-                                    <button type="button" class="btn btn_close" data-dismiss="modal">Close</button>
+                                    <button type="button" class="btn btn_close" data-dismiss="modal" style="color: black;">Close</button>
                                   </div>
                                 </div>
 
@@ -218,14 +219,34 @@
     </div>
 
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>  
 
-<script src="/socket.io/socket.io.js"></script>
-<script src="/js/group/groupchat.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/mustache.js/4.0.1/mustache.js"></script>
+
+
+
+  
+</div><!-- Div Container-->
+
+
+
+
+
+
+  <!-- JQuery -->
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <!-- Bootstrap tooltips -->
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.13.0/umd/popper.min.js"></script>
+  <!-- Bootstrap core JavaScript -->
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0/js/bootstrap.min.js"></script>
+  <!-- MDB core JavaScript -->
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mdbootstrap/4.5.4/js/mdb.min.js"></script>
+
+  <script src="/socket.io/socket.io.js"></script>    
+  <script src="/js/messagelink.js"></script>   
+  <script src="/js/group/groupchat.js"></script>
+  <script src="/js/group/sentrequest.js"></script>
+  <script src="/js/global.js"></script>
+  <script src="/js/deparam.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/mustache.js/2.3.0/mustache.js"></script>
+
 </body>
-
 </html>
-
-
