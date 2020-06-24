@@ -16,21 +16,22 @@ $(document).ready(function(){
 	});
 
 	socket.on('usersList', function(users){
-		var ol = $('<ol></ol>');
+		var ol = $('<ol></ol>'); //list
 
+		//loop để thêm user vào trong list trên view
 		for(var i = 0; i < users.length; i++){
-			ol.append('<p><a id="val" data-toggle="modal" data-target="#myModal">'+users[i]+'</a></p>');
-		}
+			ol.append('<p><a id="val" data-toggle="modal" data-target="#myModal">'+users[i]+'</a></p>'); //đổ vào tag myModal
+		} 
 
 		$(document).on('click', '#val', function(){
-			$('#name').text('@'+$(this).text());
+			$('#name').text('@'+$(this).text()); //lấy tên của 
 			$('#receiverName').val($(this).text());
-			$('#nameLink').attr("href", "/profile/"+$(this).text());
+			$('#nameLink').attr("href", "#");
 		});
 
 
-		$('#numValue').text('('+users.length+')');
-		$('#users').html(ol);
+		$('#numValue').text('('+users.length+')'); //hiện soos user
+		$('#users').html(ol); 
 	});
 
 	socket.on('newMessage', function(data){

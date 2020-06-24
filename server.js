@@ -50,10 +50,10 @@ container.resolve(function(users, _, admin, home, group, privatechat, results){
 
 		ConfigureExpress(app);
 		
-		require('./socket/groupchat')(io, Users);
-		require('./socket/friend')(io);
-		require('./socket/globalroom')(io, Global, _);
-		require('./socket/privatemessage')(io);
+		require('./socket/groupchat')(io, Users);  //groupchat
+		require('./socket/friend')(io);  //friend pre
+		require('./socket/globalroom')(io, Global, _); // user gobla
+		require('./socket/privatemessage')(io); //pm
 
 		//Setup Router
 		const router = require('express-promise-router')();

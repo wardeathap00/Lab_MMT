@@ -9,12 +9,13 @@ $(document).ready(function(){
 			sender: sender
 		}
 
-		socket.emit('joinRequest', params, function(){
+		socket.emit('joinRequest', params, function(){  
 		});
 	});
 
+	//
 	socket.on('newFriendRequest', function(friend){
-		$('#reload').load(location.href + ' #reload');
+		$('#reload').load(location.href + ' #reload'); //reload lại div để show notification
 
 			$(document).on('click', '#accept_friend', function(){
 				var senderId = $('#senderId').val();
@@ -50,13 +51,13 @@ $(document).ready(function(){
 				$('#reload').load(location.href + ' #reload');			
 			});
 	});
-
+	 //sumbit add friend
 	$('#add_friend').on('submit', function(e){
 		e.preventDefault();
 
 		var receiverName = $('#receiverName').val();
 
-		$.ajax({
+		$.ajax({ 
 			url: '/group/'+room,
 			type: 'POST',
 			data: {
@@ -86,7 +87,7 @@ $(document).ready(function(){
 				senderName: senderName
 			},
 			success: function(){
-				$(this).parent().eq(1).remove();
+				$(this).parent().eq(1).remove(); //loại bỏ div cha nếu thành công
 			}
 		});
 		$('#reload').load(location.href + ' #reload');

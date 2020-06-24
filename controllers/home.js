@@ -19,7 +19,7 @@ module.exports = function(async, Group, _, Users, Message, FriendResult){
         
         function(callback){
             Group.aggregate([
-                { $group: { _id: "$carrera" } }
+                { $group: { _id: "$number" } }
             ], (err, newResult) => {
                callback(err, newResult) ;
                
